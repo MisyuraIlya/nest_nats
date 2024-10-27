@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-producer
+  namespace: {{ .Release.Namespace }}
+spec:
+  replicas: {{ .Values.producer.replicaCount }}
+  selector:
+    matchLabels:
+      app: producer
+  template:
+    metadata:
+      labels:
+        app: producer
+    spec:
+      containers:
+        - name: producer
+          image: "{{ .Values.producer.image.repository }}:{{ .Values.producer.image.tag }}"
+          env:
+            - name: NATS_URL
+              value: "{{ .Values.producer.env.NATS_URL }}"
+          ports:
+            - containerPort: {{ .Values.producer.service.port }}

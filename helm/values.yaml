@@ -1,0 +1,40 @@
+nats:
+  image: nats
+  tag: latest
+  service:
+    type: ClusterIP
+    port: 4222
+
+# Producer service configuration
+producer:
+  image:
+    repository: spetsar/nest-nats-producer 
+    tag: latest
+  replicaCount: 1
+  service:
+    type: ClusterIP
+    port: 3000
+    targetPort: 3000
+  env:
+    NATS_URL: "nats://app-nats:4222"
+
+# Consumer service configuration
+consumer:
+  image:
+    repository: spetsar/nest-nats-consumer 
+    tag: latest
+  replicaCount: 1
+  service:
+    type: ClusterIP
+    port: 3000
+    targetPort: 3000
+  env:
+    NATS_URL: "nats://app-nats:4222"
+
+# Ingress configuration
+ingress:
+  enabled: true
+  host: myapp.local  # Replace with your actual domain or host name
+  paths:
+    producer: /api/producer
+    consumer: /api/consumer

@@ -1,0 +1,6 @@
+# helm/all-in-one-chart/Chart.yaml
+apiVersion: v2
+name: all-in-one-chart
+description: Helm chart for producer and consumer services with NATS and ingress
+version: 1.0.0
+appVersion: "1.0.0"

@@ -1,0 +1,36 @@
+# skaffold.yaml
+apiVersion: skaffold/v2beta26
+kind: Config
+metadata:
+  name: dev-environment
+build:
+  artifacts:
+    - image: spetsar/nest-nats-producer
+      context: producer
+      docker:
+        dockerfile: Dockerfile
+    - image: spetsar/nest-nats-consumer
+      context: consumer
+      docker:
+        dockerfile: Dockerfile
+deploy:
+  helm:
+    releases:
+      - name: app
+        chartPath: helm
+        valuesFiles:
+          - helm/values.yaml
+        setValues:
+          producer.image.repository: spetsar/nest-nats-producer
+          producer.image.tag: dev
+          consumer.image.repository: spetsar/nest-nats-consumer
+          consumer.image.tag: dev
+portForward:
+  - resourceType: service
+    resourceName: app-producer  
+    port: 3000
+    localPort: 3001
+  - resourceType: service
+    resourceName: app-consumer 
+    port: 3000
+    localPort: 3002
